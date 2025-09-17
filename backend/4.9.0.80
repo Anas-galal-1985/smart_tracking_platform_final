@@ -1,0 +1,2 @@
+Requirement already satisfied: opencv-python-headless in c:\users\thinkpad\anaconda3\envs\smart_tracking_ai\lib\site-packages (4.8.1.78)
+Requirement already satisfied: numpy>=1.21.2 in c:\users\thinkpad\anaconda3\envs\smart_tracking_ai\lib\site-packages (from opencv-python-headless) (1.24.4)

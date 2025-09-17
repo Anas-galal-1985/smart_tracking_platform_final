@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3">Users</h2>
+
+  <div class="row g-4">
+    {% for u in page_obj %}
+    <div class="col-md-3">
+      <a href="{% url 'user_detail' u.pk %}" class="text-decoration-none text-dark">
+        <div class="card user-card shadow-sm">
+          <div class="card-body d-flex flex-column align-items-center">
+            <!-- الصورة واسم المستخدم يظهر دائمًا -->
+            <img src="{{ u.profile.avatar.url|default:'{% static "default_avatar.png" %}' }}" 
+                 alt="{{ u.username }}" class="avatar mb-2">
+            <h5 class="text-center">{{ u.username }}</h5>
+
+            <!-- التفاصيل الإضافية تظهر عند hover -->
+            <div class="extra-info mt-2 text-center">
+              <p class="mb-1">{{ u.email }}</p>
+              <p class="text-muted">{{ u.profile.role }}</p>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center">
+      <p>No users found.</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if page_obj.paginator.num_pages > 1 %}
+  <nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1{% if query %}&q={{ query }}{% endif %}">First</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Previous</a>
+      </li>
+      {% endif %}
+
+      <li class="page-item disabled">
+        <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      </li>
+
+      {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">Last</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+
+<style>
+.user-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  overflow: hidden;
+  min-height: 180px;
+}
+.user-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+.user-card:hover .avatar {
+  transform: scale(1.1);
+}
+
+/* إخفاء التفاصيل الإضافية بشكل افتراضي */
+.extra-info {
+  opacity: 0;
+  max-height: 0;
+  transition: opacity 0.3s, max-height 0.3s;
+  overflow: hidden;
+}
+
+/* إظهار التفاصيل عند hover */
+.user-card:hover .extra-info {
+  opacity: 1;
+  max-height: 100px;
+}
+</style>
+{% endblock %}

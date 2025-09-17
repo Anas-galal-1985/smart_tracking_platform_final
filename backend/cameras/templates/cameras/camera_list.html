@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3">الكاميرات</h2>
+
+  <!-- زر إضافة كاميرا -->
+  {% if user.is_staff %}
+  <a href="{% url 'camera_list' %}" class="btn btn-success mb-3">إضافة كاميرا</a>
+  {% endif %}
+
+  <!-- رسائل النظام -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- البحث -->
+  <form method="get" class="mb-3 d-flex">
+    <input type="text" name="q" placeholder="بحث بالاسم أو الموقع..." value="{{ request.GET.q }}" class="form-control me-2">
+    <button type="submit" class="btn btn-primary">بحث</button>
+  </form>
+
+  <!-- جدول الكاميرات -->
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>الاسم</th>
+        <th>نوع المصدر</th>
+        <th>رابط المصدر</th>
+        <th>موقع الكاميرا</th>
+        <th>نشطة</th>
+        <th>إنشئت في</th>
+        <th>إجراءات</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cam in cameras %}
+      <tr>
+        <td>{{ cam.name }}</td>
+        <td>{{ cam.source_type }}</td>
+        <td>{{ cam.source_url }}</td>
+        <td>{{ cam.location }}</td>
+        <td>{% if cam.is_active %}نعم{% else %}لا{% endif %}</td>
+        <td>{{ cam.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          <a href="{% url 'camera_detail' cam.pk %}" class="btn btn-info btn-sm">عرض</a>
+          <a href="{% url 'camera_edit' cam.pk %}" class="btn btn-warning btn-sm">تعديل</a>
+          {% if user.is_staff %}
+          <a href="{% url 'camera_delete' cam.pk %}" class="btn btn-danger btn-sm">حذف</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" class="text-center">لا توجد كاميرات</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "streams/base_stream.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>🎬 قائمة الفيديوهات</h2>
+    <div class="row">
+        {% for stream in streams %}
+        <div class="col-md-4 mt-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ stream.title }}</h5>
+
+                    {% if stream.is_live %}
+                        <span class="badge bg-danger">Live 🔴</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Recorded</span>
+                    {% endif %}
+
+                    <p class="mt-2">
+                        الكاميرا:
+                        {% if stream.camera %}
+                            {{ stream.camera.name }}
+                        {% else %}
+                            غير محددة
+                        {% endif %}
+                    </p>
+
+                    <p class="mt-1">تاريخ الرفع: {{ stream.uploaded_at|date:"d/m/Y H:i" }}</p>
+
+                    <a href="{% url 'stream_detail' stream.id %}" class="btn btn-primary btn-sm mt-2">تشغيل الفيديو ▶️</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>لا توجد فيديوهات بعد. ⬆️ ارفع أول فيديو لك!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Site Settings{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Site Settings</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" id="settings-form">
+        {% csrf_token %}
+
+        <!-- Navbar Color -->
+        <div class="mb-3">
+            <label for="id_navbar_color" class="form-label">Navbar Color</label>
+            {{ form.navbar_color }}
+        </div>
+
+        <!-- Preview Navbar Color -->
+        <div class="mb-3">
+            <label class="form-label">Preview:</label>
+            <nav id="preview-navbar" class="navbar navbar-expand-lg navbar-dark mb-2">
+                <span class="navbar-text text-white">This is a preview navbar</span>
+            </nav>
+        </div>
+
+        <!-- Cameras Enabled -->
+        <div class="form-check mb-3">
+            {{ form.cameras_enabled }}
+            <label class="form-check-label" for="id_cameras_enabled">Enable Cameras</label>
+        </div>
+
+        <!-- Advanced Tracking Options -->
+        <div class="mb-3">
+            <label for="id_advanced_tracking_options" class="form-label">Advanced Tracking Options (JSON)</label>
+            {{ form.advanced_tracking_options }}
+        </div>
+
+        <!-- Site Name -->
+        <div class="mb-3">
+            <label for="id_site_name" class="form-label">Site Name</label>
+            {{ form.site_name }}
+        </div>
+
+        <!-- Maintenance Mode -->
+        <div class="form-check mb-3">
+            {{ form.maintenance_mode }}
+            <label class="form-check-label" for="id_maintenance_mode">Maintenance Mode</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Settings</button>
+    </form>
+</div>
+
+<script>
+    const navbarColorSelect = document.getElementById('id_navbar_color');
+    const previewNavbar = document.getElementById('preview-navbar');
+
+    function updateNavbarColor() {
+        previewNavbar.className = 'navbar navbar-expand-lg navbar-dark mb-2';
+        previewNavbar.classList.add('bg-' + navbarColorSelect.value);
+    }
+
+    navbarColorSelect.addEventListener('change', updateNavbarColor);
+
+    // Initialize preview on page load
+    updateNavbarColor();
+</script>
+{% endblock %}

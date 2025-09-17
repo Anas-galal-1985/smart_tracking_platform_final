@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">📊 Dashboard</h2>
+
+    <div class="row">
+        <!-- المستخدمون -->
+        <div class="col-md-4 mb-3">
+            <div class="card text-white bg-primary h-100">
+                <div class="card-body">
+                    <h5 class="card-title">المستخدمون</h5>
+                    <p class="card-text fs-3">{{ total_users }}</p>
+                    <a href="{% url 'users_list' %}" class="btn btn-light btn-sm">عرض المستخدمين</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- الكاميرات -->
+        <div class="col-md-4 mb-3">
+            <div class="card text-white bg-success h-100">
+                <div class="card-body">
+                    <h5 class="card-title">الكاميرات</h5>
+                    <p class="card-text fs-3">{{ total_cameras }}</p>
+                    <a href="{% url 'camera_list' %}" class="btn btn-light btn-sm">عرض الكاميرات</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- الكائنات المتعقبة -->
+        <div class="col-md-4 mb-3">
+            <div class="card text-white bg-warning h-100">
+                <div class="card-body">
+                    <h5 class="card-title">الكائنات المتعقبة</h5>
+                    <p class="card-text fs-3">{{ total_tracked }}</p>
+                    <a href="{% url 'tracked_list' %}" class="btn btn-light btn-sm">عرض الكائنات</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- قسم إضافي للإحصاءات أو الرسوم البيانية لاحقاً -->
+    <div class="mt-4">
+        <h4>إحصاءات إضافية</h4>
+        <p>يمكن إضافة رسوم بيانية هنا لاحقًا باستخدام Chart.js أو أي مكتبة أخرى.</p>
+    </div>
+</div>
+{% endblock %}

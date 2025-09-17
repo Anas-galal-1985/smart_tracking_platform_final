@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h3>هل أنت متأكد من حذف المطلوب: {{ person.full_name }}؟</h3>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">حذف</button>
+    <a href="{% url 'wanted_list' %}" class="btn btn-secondary">إلغاء</a>
+  </form>
+</div>
+{% endblock %}

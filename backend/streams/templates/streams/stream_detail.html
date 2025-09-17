@@ -1,0 +1,18 @@
+{% extends "streams/base_stream.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>🎬 {{ stream.title }}</h2>
+
+    {% if stream.uploaded_file %}
+    <div class="mt-3">
+        <video width="100%" controls>
+            <source src="{{ stream.uploaded_file.url }}" type="video/mp4">
+            متصفحك لا يدعم تشغيل الفيديو.
+        </video>
+    </div>
+    {% else %}
+    <p>🚫 لا يوجد فيديو مرفوع لهذا البث.</p>
+    {% endif %}
+</div>
+{% endblock %}

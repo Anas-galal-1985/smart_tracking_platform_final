@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>تأكيد حذف الكاميرا</h2>
+  <p>هل أنت متأكد من حذف الكاميرا: <strong>{{ camera.name }}</strong>؟</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">حذف</button>
+    <a href="{% url 'camera_list' %}" class="btn btn-secondary ms-2">إلغاء</a>
+  </form>
+</div>
+{% endblock %}

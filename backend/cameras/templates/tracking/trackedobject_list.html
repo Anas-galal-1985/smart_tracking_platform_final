@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Tracked Objects</h2>
+
+  <!-- رسائل النظام -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <a href="{% url 'tracked_add' %}" class="btn btn-success mb-3">Add Tracked Object</a>
+
+  <form method="get" class="mb-3 d-flex">
+    <input type="text" name="q" placeholder="Search by label or camera..." value="{{ query }}" class="form-control me-2">
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Label</th>
+        <th>Camera</th>
+        <th>Track ID</th>
+        <th>Timestamp</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for obj in page_obj %}
+      <tr>
+        <td>{{ obj.label }}</td>
+        <td>{{ obj.camera.name }}</td>
+        <td>{{ obj.track_id }}</td>
+        <td>{{ obj.timestamp }}</td>
+        <td>
+          <a href="{% url 'tracked_detail' obj.pk %}" class="btn btn-info btn-sm">View</a>
+          {% if user.is_staff %}
+          <a href="{% url 'tracked_edit' obj.pk %}" class="btn btn-warning btn-sm">Edit</a>
+          <a href="{% url 'tracked_delete' obj.pk %}" class="btn btn-danger btn-sm">Delete</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="text-center">No tracked objects found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Previous</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">Previous</span></li>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% else %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">Next</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+{% endblock %}

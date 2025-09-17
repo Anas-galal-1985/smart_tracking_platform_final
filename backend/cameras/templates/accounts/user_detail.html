@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <!-- عرض رسائل النظام -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="card shadow-sm">
+    {% with 'bg-'|add:navbar_color as navbar_class %}
+    <div class="navbar navbar-expand-lg {{ navbar_class }} navbar-dark mb-4">
+    {% endwith %}
+    
+      <h4>تفاصيل المستخدم: {{ user_obj.username }}</h4>
+    </div>
+    <div class="card-body text-center">
+      {% if user_obj.profile.avatar %}
+        <img src="{{ user_obj.profile.avatar.url }}" class="img-thumbnail mb-3" alt="Avatar" style="max-width:150px;">
+      {% else %}
+        <img src="{% static 'default_avatar.png' %}" class="img-thumbnail mb-3" alt="Avatar" style="max-width:150px;">
+      {% endif %}
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th>Username</th>
+            <td>{{ user_obj.username }}</td>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <td>{{ user_obj.email }}</td>
+          </tr>
+          <tr>
+            <th>Staff</th>
+            <td>{{ user_obj.is_staff }}</td>
+          </tr>
+          <tr>
+            <th>Active</th>
+            <td>{{ user_obj.is_active }}</td>
+          </tr>
+          <tr>
+            <th>Date Joined</th>
+            <td>{{ user_obj.date_joined }}</td>
+          </tr>
+          <tr>
+            <th>Full Name</th>
+            <td>{{ user_obj.profile.full_name }}</td>
+          </tr>
+          <tr>
+            <th>Role</th>
+            <td>{{ user_obj.profile.role }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer text-center">
+      <a href="{% url 'user_edit' user_obj.pk %}" class="btn btn-warning me-2">تعديل</a>
+      <a href="{% url 'user_delete' user_obj.pk %}" class="btn btn-danger me-2">حذف</a>
+      <a href="{% url 'users_list' %}" class="btn btn-secondary">عودة للقائمة</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

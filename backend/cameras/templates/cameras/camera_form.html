@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load form_tags %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3">{{ title }}</h2>
+
+  <!-- رسائل النظام -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6">
+        {{ form.name.label_tag }}
+        {{ form.name|add_class:"form-control" }}
+        {% for error in form.name.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="col-md-6">
+        {{ form.source_type.label_tag }}
+        {{ form.source_type|add_class:"form-control" }}
+        {% for error in form.source_type.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="col-md-6 mt-3">
+        {{ form.source_url.label_tag }}
+        {{ form.source_url|add_class:"form-control" }}
+        {% for error in form.source_url.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="col-md-3 mt-3">
+        {{ form.is_active.label_tag }}
+        {{ form.is_active }}
+        {% for error in form.is_active.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="col-md-6 mt-3">
+        {{ form.location.label_tag }}
+        {{ form.location|add_class:"form-control" }}
+        {% for error in form.location.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">حفظ</button>
+    <a href="{% url 'camera_list' %}" class="btn btn-secondary mt-3">عودة للقائمة</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+<!-- streams/templates/streams/upload_stream.html -->
+{% extends "streams/base_stream.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>⬆️ رفع فيديو أو بث مباشر</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.title.label_tag }} {{ form.title }}
+        </div>
+        <div class="mb-3">
+            {{ form.uploaded_file.label_tag }} {{ form.uploaded_file }}
+        </div>
+        <div class="mb-3 form-check">
+            {{ form.is_live }} {{ form.is_live.label_tag }}
+        </div>
+        <div class="mb-3">
+            {{ form.camera.label_tag }} {{ form.camera }}
+        </div>
+        <button type="submit" class="btn btn-primary">رفع</button>
+    </form>
+</div>
+{% endblock %}

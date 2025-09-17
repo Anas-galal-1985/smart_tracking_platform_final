@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>تفاصيل الكاميرا: {{ camera.name }}</h2>
+
+  <p><strong>المصدر:</strong> {{ camera.source_type }}</p>
+  <p><strong>رابط المصدر:</strong> {{ camera.source_url }}</p>
+  <p><strong>الموقع:</strong> {{ camera.location }}</p>
+  <p><strong>الحالة:</strong> {{ camera.is_active|yesno:"Active,Inactive" }}</p>
+
+  {% if user.is_staff %}
+    <a href="{% url 'camera_edit' camera.pk %}" class="btn btn-warning">تعديل</a>
+    <a href="{% url 'camera_delete' camera.pk %}" class="btn btn-danger">حذف</a>
+  {% endif %}
+  <a href="{% url 'camera_list' %}" class="btn btn-secondary">عودة للقائمة</a>
+</div>
+{% endblock %}

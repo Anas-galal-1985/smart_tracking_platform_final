@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Tracked Object Detail (ID: {{ object.id }})</h2>
+
+<p>Camera: {{ object.camera.name }}</p>
+<p>Track ID: {{ object.track_id }}</p>
+<p>Label: {{ object.label }}</p>
+<p>Confidence: {{ object.confidence }}</p>
+<p>BBox: {{ object.bbox }}</p>
+<p>Timestamp: {{ object.timestamp }}</p>
+<p>Frame Number: {{ object.frame_number }}</p>
+<p>Extra: {{ object.extra }}</p>
+
+<a href="{% url 'tracked_edit' object.pk %}" class="btn btn-warning">Edit</a>
+<a href="{% url 'tracked_delete' object.pk %}" class="btn btn-danger">Delete</a>
+<a href="{% url 'tracked_list' %}" class="btn btn-secondary">Back to List</a>
+{% endblock %}

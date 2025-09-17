@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load form_tags %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3">{% if is_edit %}تعديل المستخدم{% else %}إضافة مستخدم جديد{% endif %}</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="row g-3">
+    {% csrf_token %}
+
+    <div class="col-md-6">
+      {{ user_form.username.label_tag }}
+      {{ user_form.username|add_class:"form-control" }}
+    </div>
+    <div class="col-md-6">
+      {{ user_form.email.label_tag }}
+      {{ user_form.email|add_class:"form-control" }}
+    </div>
+    <div class="col-md-3 form-check">
+      {{ user_form.is_active|add_class:"form-check-input" }}
+      {{ user_form.is_active.label_tag }}
+    </div>
+    <div class="col-md-3 form-check">
+      {{ user_form.is_staff|add_class:"form-check-input" }}
+      {{ user_form.is_staff.label_tag }}
+    </div>
+
+    <div class="col-md-6">
+      {{ profile_form.full_name.label_tag }}
+      {{ profile_form.full_name|add_class:"form-control" }}
+    </div>
+    <div class="col-md-6">
+      {{ profile_form.role.label_tag }}
+      {{ profile_form.role|add_class:"form-control" }}
+    </div>
+
+    <div class="col-md-6">
+      {{ profile_form.avatar.label_tag }}
+      {{ profile_form.avatar }}
+    </div>
+
+    <div class="col-12 mt-3">
+      <button type="submit" class="btn btn-primary">{% if is_edit %}حفظ التعديلات{% else %}إضافة المستخدم{% endif %}</button>
+      <a href="{% url 'users_list' %}" class="btn btn-secondary ms-2">إلغاء</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

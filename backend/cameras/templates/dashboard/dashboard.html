@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Dashboard</h2>
+
+    <div class="row g-4">
+        <!-- إجمالي المستخدمين -->
+        <div class="col-md-4">
+            <div class="card text-white bg-primary shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Users</h5>
+                    <p class="card-text fs-3">{{ total_users }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- إجمالي الكاميرات -->
+        <div class="col-md-4">
+            <div class="card text-white bg-success shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Cameras</h5>
+                    <p class="card-text fs-3">{{ total_cameras }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- إجمالي الكائنات المتعقبة -->
+        <div class="col-md-4">
+            <div class="card text-white bg-warning shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Tracked Objects</h5>
+                    <p class="card-text fs-3">{{ total_tracked }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- قسم سريع للوصول -->
+    <div class="mt-5">
+        <h4>Quick Access</h4>
+        <div class="d-flex gap-3 flex-wrap">
+            <a href="{% url 'users_list' %}" class="btn btn-outline-primary">Users</a>
+            <a href="{% url 'camera_list' %}" class="btn btn-outline-success">Cameras</a>
+            <a href="{% url 'tracked_list' %}" class="btn btn-outline-warning">Tracked Objects</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
