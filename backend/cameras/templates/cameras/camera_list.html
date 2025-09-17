@@ -1,64 +1,76 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 <div class="container mt-4">
-  <h2 class="mb-3">الكاميرات</h2>
 
-  <!-- زر إضافة كاميرا -->
-  {% if user.is_staff %}
-  <a href="{% url 'camera_list' %}" class="btn btn-success mb-3">إضافة كاميرا</a>
-  {% endif %}
+  <!-- Header: Title, Search, and Add Button -->
+  <div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+      <h2 class="mb-0">الكاميرات</h2>
+    </div>
+    <div class="col-md-6 d-flex justify-content-end">
+      <!-- Search Form -->
+      <form method="get" class="me-2">
+        <div class="input-group">
+          <input type="text" name="q" placeholder="بحث بالاسم أو الموقع..." value="{{ request.GET.q }}" class="form-control">
+          <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+        </div>
+      </form>
+      <!-- Add Camera Button -->
+      {% if user.is_staff %}
+      <a href="{% url 'camera_create' %}" class="btn btn-success"><i class="bi bi-plus-lg"></i> إضافة كاميرا</a>
+      {% endif %}
+    </div>
+  </div>
 
-  <!-- رسائل النظام -->
+  <!-- System Messages -->
   {% if messages %}
     {% for message in messages %}
-      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
         {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     {% endfor %}
   {% endif %}
 
-  <!-- البحث -->
-  <form method="get" class="mb-3 d-flex">
-    <input type="text" name="q" placeholder="بحث بالاسم أو الموقع..." value="{{ request.GET.q }}" class="form-control me-2">
-    <button type="submit" class="btn btn-primary">بحث</button>
-  </form>
-
-  <!-- جدول الكاميرات -->
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>الاسم</th>
-        <th>نوع المصدر</th>
-        <th>رابط المصدر</th>
-        <th>موقع الكاميرا</th>
-        <th>نشطة</th>
-        <th>إنشئت في</th>
-        <th>إجراءات</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for cam in cameras %}
-      <tr>
-        <td>{{ cam.name }}</td>
-        <td>{{ cam.source_type }}</td>
-        <td>{{ cam.source_url }}</td>
-        <td>{{ cam.location }}</td>
-        <td>{% if cam.is_active %}نعم{% else %}لا{% endif %}</td>
-        <td>{{ cam.created_at|date:"Y-m-d H:i" }}</td>
-        <td>
-          <a href="{% url 'camera_detail' cam.pk %}" class="btn btn-info btn-sm">عرض</a>
-          <a href="{% url 'camera_edit' cam.pk %}" class="btn btn-warning btn-sm">تعديل</a>
-          {% if user.is_staff %}
-          <a href="{% url 'camera_delete' cam.pk %}" class="btn btn-danger btn-sm">حذف</a>
+  <!-- Camera Cards -->
+  <div class="row">
+    {% for cam in cameras %}
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">{{ cam.name }}</h5>
+          {% if cam.is_active %}
+            <span class="badge bg-success">نشطة</span>
+          {% else %}
+            <span class="badge bg-secondary">غير نشطة</span>
           {% endif %}
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="7" class="text-center">لا توجد كاميرات</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+        </div>
+        <div class="card-body">
+          <p class="card-text"><i class="bi bi-geo-alt-fill me-2"></i><strong>الموقع:</strong> {{ cam.location }}</p>
+          <p class="card-text"><i class="bi bi-camera-video-fill me-2"></i><strong>نوع المصدر:</strong> {{ cam.get_source_type_display }}</p>
+          <p class="card-text"><i class="bi bi-link-45deg me-2"></i><strong>الرابط:</strong> <a href="{{ cam.source_url }}" target="_blank" rel="noopener noreferrer">عرض المصدر</a></p>
+          <p class="card-text text-muted"><small><i class="bi bi-clock me-2"></i>أنشئت في: {{ cam.created_at|date:"Y-m-d H:i" }}</small></p>
+        </div>
+        <div class="card-footer bg-light">
+          <div class="d-flex justify-content-end">
+            <a href="{% url 'camera_detail' cam.pk %}" class="btn btn-info btn-sm me-2" title="عرض"><i class="bi bi-eye"></i></a>
+            <a href="{% url 'camera_edit' cam.pk %}" class="btn btn-warning btn-sm me-2" title="تعديل"><i class="bi bi-pencil-square"></i></a>
+            {% if user.is_staff %}
+            <a href="{% url 'camera_delete' cam.pk %}" class="btn btn-danger btn-sm" title="حذف"><i class="bi bi-trash"></i></a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="alert alert-info text-center">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        لا توجد كاميرات لعرضها. حاول إضافة كاميرا جديدة.
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}
