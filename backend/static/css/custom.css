@@ -1,0 +1,110 @@
+/* Import Google Font - Cairo */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: #1a1a2e; /* Dark blue-grey background */
+    color: #e0e0e0; /* Light grey text */
+}
+
+/* Navbar */
+.navbar {
+    background-color: #162447 !important; /* Slightly lighter dark blue */
+    border-bottom: 2px solid #1f4068; /* Blue accent border */
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #e43f5a !important; /* A contrasting color for the brand */
+}
+
+.nav-link {
+    color: #e0e0e0 !important;
+}
+
+.nav-link:hover {
+    color: #ffffff !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #1f4068;
+    border-color: #1f4068;
+}
+
+.btn-primary:hover {
+    background-color: #275288;
+    border-color: #275288;
+}
+
+.btn-outline-light {
+    border-color: #e0e0e0;
+    color: #e0e0e0;
+}
+
+.btn-outline-light:hover {
+    background-color: #e0e0e0;
+    color: #1a1a2e;
+}
+
+
+/* Cards */
+.card {
+    background-color: #162447;
+    border: 1px solid #1f4068;
+}
+
+.card-header {
+    background-color: #1f4068;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Forms */
+.form-control {
+    background-color: #162447;
+    color: #e0e0e0;
+    border: 1px solid #1f4068;
+}
+
+.form-control:focus {
+    background-color: #162447;
+    color: #e0e0e0;
+    border-color: #275288;
+    box-shadow: 0 0 0 0.25rem rgba(31, 64, 104, 0.5);
+}
+
+.form-control::placeholder {
+    color: #888;
+}
+
+/* Footer */
+footer.bg-light {
+    background-color: #162447 !important;
+    color: #e0e0e0;
+}
+
+/* Tables */
+.table {
+    color: #e0e0e0;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+thead th {
+    color: #ffffff;
+    background-color: #1f4068;
+    border-color: #1f4068;
+}
+
+/* Welcome message */
+.navbar-text {
+    color: #ffffff !important;
+}
