@@ -1,371 +1,79 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block title %}Cameras - Smart Tracking{% endblock %}
+
 {% block content %}
-<style>
-  :root {
-    --primary: #2563eb;
-    --primary-dark: #1d4ed8;
-    --secondary: #64748b;
-    --success: #10b981;
-    --danger: #ef4444;
-    --light-bg: #f8fafc;
-    --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .hero-section {
-    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-    color: white;
-    padding: 2rem 0;
-    border-radius: 16px;
-    margin-bottom: 2.5rem;
-    box-shadow: var(--card-shadow);
-  }
-
-  .hero-section h1 {
-    font-weight: 700;
-    letter-spacing: -0.5px;
-  }
-
-  .stat-card {
-    border-radius: 16px;
-    box-shadow: var(--card-shadow);
-    transition: var(--transition);
-    border: none;
-    padding: 1.5rem;
-    background: white;
-  }
-
-  .stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-  }
-
-  .stat-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: white;
-  }
-
-  .btn-action {
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-    font-size: 0.9rem;
-  }
-
-  .btn-action:hover {
-    transform: scale(1.1);
-  }
-
-  .camera-card {
-    border-radius: 16px;
-    box-shadow: var(--card-shadow);
-    transition: var(--transition);
-    overflow: hidden;
-    margin-bottom: 1.5rem;
-    background: white;
-  }
-
-  .camera-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  }
-
-  .camera-header {
-    background: linear-gradient(135deg, #dbeafe, #eff6ff);
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #e2e8f0;
-  }
-
-  .status-badge {
-    padding: 0.4rem 0.8rem;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 0.85rem;
-  }
-
-  .search-box {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: var(--card-shadow);
-  }
-
-  .empty-state {
-    padding: 4rem 2rem;
-    text-align: center;
-    background: var(--light-bg);
-    border-radius: 16px;
-  }
-
-  .empty-state i {
-    font-size: 4rem;
-    color: #94a3b8;
-    margin-bottom: 1rem;
-  }
-
-  .btn-pill {
-    border-radius: 50px;
-  }
-
-  .table-responsive {
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .table thead th {
-    background: #f1f5f9;
-    font-weight: 600;
-    color: #334155;
-    border: none;
-    padding: 1rem;
-  }
-
-  .table-hover tbody tr:hover {
-    background-color: #f8fafc !important;
-  }
-
-  @media (max-width: 768px) {
-    .btn-action {
-      width: 32px;
-      height: 32px;
-      font-size: 0.8rem;
-    }
-    .stat-card {
-      margin-bottom: 1rem;
-    }
-  }
-</style>
-
-<div class="container py-4">
-  <!-- Hero Section -->
-  <div class="hero-section text-center text-white mb-5">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-md-8 text-md-start">
-          <h1 class="display-5 fw-bold">
-            <i class="fas fa-video me-3"></i>
-            لوحة تحكم الكاميرات
-          </h1>
-          <p class="lead opacity-90">راقب، أضف، وحرر الكاميرات بسهولة واحترافية</p>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0">Camera Management</h2>
+            <p class="text-muted">Manage all cameras in the system.</p>
         </div>
-        <div class="col-md-4 text-md-end mt-4 mt-md-0">
-          {% if user.is_staff %}
-            <a href="{% url 'camera_list' %}" class="btn btn-light btn-lg btn-pill px-4 shadow">
-              <i class="fas fa-plus-circle me-2"></i> إضافة كاميرا
+        <div>
+            <a href="{% url 'camera_add' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Add New Camera
             </a>
-          {% endif %}
         </div>
-      </div>
     </div>
-  </div>
 
-  <!-- System Messages -->
-  {% if messages %}
-    <div class="row mb-4">
-      <div class="col">
-        {% for message in messages %}
-          <div class="alert alert-dismissible fade show 
-            {% if message.tags == 'error' %}alert-danger
-            {% elif message.tags == 'success' %}alert-success
-            {% elif message.tags == 'warning' %}alert-warning
-            {% else %}alert-info{% endif %}" 
-            role="alert">
-            <div class="d-flex align-items-center">
-              <i class="fas fa-bell me-2"></i>
-              <span>{{ message }}</span>
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-  {% endif %}
-
-  <!-- Stats Cards -->
-  <div class="row g-4 mb-4">
-    <div class="col-md-4">
-      <div class="stat-card">
-        <div class="d-flex align-items-center">
-          <div class="stat-icon bg-primary me-4">
-            <i class="fas fa-video"></i>
-          </div>
-          <div>
-            <h3 class="mb-0 fw-bold">{{ cameras|length }}</h3>
-            <p class="text-muted mb-0">إجمالي الكاميرات</p>
-          </div>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">All Cameras</h5>
+            <form method="get" class="d-flex">
+                <input type="text" name="q" class="form-control me-2" placeholder="Search cameras..." value="{{ request.GET.q }}">
+                <button type="submit" class="btn btn-outline-primary">Search</button>
+            </form>
         </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="stat-card">
-        <div class="d-flex align-items-center">
-          <div class="stat-icon bg-success me-4">
-            <i class="fas fa-check-circle"></i>
-          </div>
-          <div>
-            <h3 class="mb-0 fw-bold">{{ cameras|length|default:0 }}</h3>
-            <p class="text-muted mb-0">كاميرات نشطة</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="stat-card">
-        <div class="d-flex align-items-center">
-          <div class="stat-icon bg-danger me-4">
-            <i class="fas fa-exclamation-triangle"></i>
-          </div>
-          <div>
-            <h3 class="mb-0 fw-bold">0</h3>
-            <p class="text-muted mb-0">تحت الصيانة</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Search Section -->
-  <div class="search-box mb-5">
-    <form method="get" class="row g-3 align-items-center">
-      <div class="col-md-10">
-        <div class="input-group">
-          <span class="input-group-text bg-white border-end-0">
-            <i class="fas fa-search text-muted"></i>
-          </span>
-          <input 
-            type="text" 
-            name="q" 
-            placeholder="ابحث بالاسم، الموقع، نوع المصدر، أو الحالة..." 
-            value="{{ request.GET.q }}" 
-            class="form-control border-start-0 py-3"
-            style="font-size: 1.1rem;"
-          >
-        </div>
-      </div>
-      <div class="col-md-2 d-grid">
-        <button type="submit" class="btn btn-primary btn-lg btn-pill">
-          <i class="fas fa-search me-2"></i> بحث
-        </button>
-      </div>
-      {% if request.GET.q %}
-        <div class="col-12 text-end">
-          <a href="{% url 'camera_list' %}" class="text-decoration-none small text-muted">
-            <i class="fas fa-undo me-1"></i> مسح البحث وعرض الكل
-          </a>
-        </div>
-      {% endif %}
-    </form>
-  </div>
-
-  <!-- Results -->
-  {% if cameras %}
-    <div class="row g-4">
-      {% for cam in cameras %}
-        <div class="col-12">
-          <div class="camera-card">
-            <div class="camera-header d-flex justify-content-between align-items-center">
-              <h5 class="mb-0 fw-bold">{{ cam.name }}</h5>
-              <span class="badge status-badge 
-                {% if cam.is_active %}bg-success text-white
-                {% else %}bg-danger text-white{% endif %}">
-                {% if cam.is_active %}<i class="fas fa-check-circle me-1"></i> نشطة
-                {% else %}<i class="fas fa-times-circle me-1"></i> غير نشطة{% endif %}
-              </span>
-            </div>
-            <div class="p-4">
-              <div class="row">
-                <div class="col-md-8">
-                  <div class="mb-3">
-                    <span class="text-muted small d-block mb-1">نوع المصدر</span>
-                    <span class="badge bg-info">{{ cam.source_type }}</span>
-                  </div>
-                  <div class="mb-3">
-                    <span class="text-muted small d-block mb-1">رابط المصدر</span>
-                    <a href="{{ cam.source_url }}" target="_blank" class="text-primary text-decoration-none">
-                      {{ cam.source_url|truncatechars:50 }}
-                    </a>
-                  </div>
-                  <div class="mb-3">
-                    <span class="text-muted small d-block mb-1">الموقع</span>
-                    <p class="mb-0">{{ cam.location|default:"غير محدد" }}</p>
-                  </div>
-                  <div>
-                    <span class="text-muted small d-block mb-1">تاريخ الإنشاء</span>
-                    <p class="mb-0">{{ cam.created_at|date:"Y-m-d H:i" }}</p>
-                  </div>
+        <div class="card-body">
+            {% if cameras %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Source Type</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Created At</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cam in cameras %}
+                                <tr>
+                                    <th scope="row">{{ cam.id }}</th>
+                                    <td>{{ cam.name }}</td>
+                                    <td>{{ cam.location|default:"N/A" }}</td>
+                                    <td><span class="badge bg-info">{{ cam.source_type }}</span></td>
+                                    <td>
+                                        {% if cam.is_active %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ cam.created_at|date:"Y-m-d H:i" }}</td>
+                                    <td>
+                                        <a href="{% url 'camera_detail' cam.pk %}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
+                                        <a href="{% url 'camera_edit' cam.pk %}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
+                                        <a href="{% url 'camera_delete' cam.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-md-4 d-flex flex-column justify-content-center">
-                  <div class="d-flex gap-2 justify-content-md-end">
-                    <a href="{% url 'camera_detail' cam.pk %}" class="btn btn-outline-info btn-action" title="عرض التفاصيل">
-                      <i class="fas fa-eye"></i>
-                    </a>
-                    <a href="{% url 'camera_edit' cam.pk %}" class="btn btn-outline-warning btn-action" title="تعديل">
-                      <i class="fas fa-edit"></i>
-                    </a>
-                    {% if user.is_staff %}
-                      <a href="{% url 'camera_delete' cam.pk %}" 
-                         class="btn btn-outline-danger btn-action" 
-                         title="حذف" 
-                         onclick="return confirm('⚠️ هل أنت متأكد أنك تريد حذف الكاميرا: {{ cam.name }}؟ لن يمكن التراجع!')">
-                        <i class="fas fa-trash-alt"></i>
-                      </a>
-                    {% endif %}
-                  </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-camera-video-off-fill fs-1 text-muted"></i>
+                    <h5 class="mt-3">No Cameras Found</h5>
+                    <p class="text-muted">There are no cameras matching your search criteria.</p>
                 </div>
-              </div>
-            </div>
-          </div>
+            {% endif %}
         </div>
-      {% endfor %}
+        <!-- Pagination would go here if implemented in the view -->
     </div>
-
-    <!-- Pagination Placeholder (Add later if needed) -->
-    <!--
-    <nav class="mt-5">
-      <ul class="pagination justify-content-center">
-        <li class="page-item disabled"><a class="page-link" href="#">السابق</a></li>
-        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">التالي</a></li>
-      </ul>
-    </nav>
-    -->
-
-  {% else %}
-    <div class="empty-state">
-      <i class="fas fa-video-slash"></i>
-      <h3 class="mb-3">لا توجد كاميرات لعرضها</h3>
-      <p class="text-muted mb-4">لم يتم العثور على كاميرات مطابقة لمعايير البحث الحالية.</p>
-      <div class="d-flex justify-content-center gap-3 flex-wrap">
-        <a href="{% url 'camera_list' %}" class="btn btn-outline-primary btn-lg btn-pill px-4">
-          <i class="fas fa-sync me-2"></i> إعادة تعيين البحث
-        </a>
-        {% if user.is_staff %}
-          <a href="{% url 'camera_add' %}" class="btn btn-primary btn-lg btn-pill px-4">
-            <i class="fas fa-plus-circle me-2"></i> إضافة كاميرا جديدة
-          </a>
-        {% endif %}
-      </div>
-    </div>
-  {% endif %}
-
 </div>
-
-<!-- Include Font Awesome if not in base -->
-{% block extra_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-{% endblock %}
-
 {% endblock %}
