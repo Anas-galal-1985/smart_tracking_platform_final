@@ -1,39 +1,226 @@
 {% extends "streams/base_stream.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>🎬 قائمة الفيديوهات</h2>
-    <div class="row">
-        {% for stream in streams %}
-        <div class="col-md-4 mt-3">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">{{ stream.title }}</h5>
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --danger: #ef4444;
+    --secondary: #64748b;
+    --light: #f8fafc;
+    --dark: #1e293b;
+    --radius: 16px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-hover: 0 12px 35px rgba(0,0,0,0.15);
+    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-                    {% if stream.is_live %}
-                        <span class="badge bg-danger">Live 🔴</span>
-                    {% else %}
-                        <span class="badge bg-secondary">Recorded</span>
-                    {% endif %}
+  .streams-section {
+    padding: 3rem 0;
+  }
 
-                    <p class="mt-2">
-                        الكاميرا:
-                        {% if stream.camera %}
-                            {{ stream.camera.name }}
-                        {% else %}
-                            غير محددة
-                        {% endif %}
-                    </p>
+  .section-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
 
-                    <p class="mt-1">تاريخ الرفع: {{ stream.uploaded_at|date:"d/m/Y H:i" }}</p>
+  .section-header h2 {
+    font-weight: 700;
+    font-size: 2.2rem;
+    color: var(--dark);
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.5rem;
+  }
 
-                    <a href="{% url 'stream_detail' stream.id %}" class="btn btn-primary btn-sm mt-2">تشغيل الفيديو ▶️</a>
-                </div>
-            </div>
+  .section-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+    border-radius: 2px;
+  }
+
+  .stream-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    height: 100%;
+    border: 1px solid #f1f5f9;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stream-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+    border-color: #e2e8f0;
+  }
+
+  .card-body {
+    padding: 1.8rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-body h5 {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--dark);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+  }
+
+  .stream-card:hover h5 {
+    color: var(--primary);
+  }
+
+  .badge-live {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+    color: white;
+    font-weight: 600;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+  }
+
+  .badge-recorded {
+    background: linear-gradient(90deg, #64748b, #475569);
+    color: white;
+    font-weight: 600;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+  }
+
+  .meta-info {
+    color: var(--secondary);
+    font-size: 0.9rem;
+    margin: 0.8rem 0;
+    line-height: 1.6;
+  }
+
+  .meta-info strong {
+    color: var(--dark);
+  }
+
+  .btn-play {
+    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    transition: var(--transition);
+    border: none;
+    align-self: flex-start;
+    margin-top: auto;
+  }
+
+  .btn-play:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: #f8fafc;
+    border-radius: var(--radius);
+    margin: 2rem auto;
+    max-width: 600px;
+    box-shadow: var(--shadow);
+  }
+
+  .empty-state i {
+    font-size: 4rem;
+    color: #94a3b8;
+    margin-bottom: 1.5rem;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    50% { opacity: 0.8; box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+  }
+
+  @media (max-width: 768px) {
+    .section-header h2 {
+      font-size: 1.8rem;
+    }
+    .card-body {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<div class="container streams-section">
+  <div class="section-header">
+    <h2><i class="fas fa-film me-2"></i> 🎬 قائمة الفيديوهات</h2>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for stream in streams %}
+    <div class="col">
+      <div class="stream-card">
+        <div class="card-body">
+          <h5>{{ stream.title|default:"بدون عنوان" }}</h5>
+
+          <div class="mb-3">
+            {% if stream.is_live %}
+              <span class="badge-live">
+                <i class="fas fa-circle me-1"></i> Live 🔴
+              </span>
+            {% else %}
+              <span class="badge-recorded">
+                <i class="fas fa-video me-1"></i> Recorded
+              </span>
+            {% endif %}
+          </div>
+
+          <div class="meta-info">
+            <p><strong>الكاميرا:</strong> {{ stream.camera.name|default:"غير محددة" }}</p>
+            <p><strong>تاريخ الرفع:</strong> {{ stream.uploaded_at|date:"d/m/Y H:i" }}</p>
+          </div>
+
+          <a href="{% url 'stream_detail' stream.id %}" class="btn btn-play">
+            <i class="fas fa-play-circle me-1"></i> تشغيل الفيديو
+          </a>
         </div>
-        {% empty %}
-        <p>لا توجد فيديوهات بعد. ⬆️ ارفع أول فيديو لك!</p>
-        {% endfor %}
+      </div>
     </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="empty-state">
+        <i class="fas fa-video-slash"></i>
+        <h3>لا توجد فيديوهات بعد</h3>
+        <p class="text-muted mb-4">يبدو أنه لم يتم رفع أي فيديوهات حتى الآن. ابدأ برفع أول فيديو لمراقبة الأحداث!</p>
+        <a href="{% url 'upload_video' %}" class="btn btn-primary px-4 py-2">
+          <i class="fas fa-cloud-upload-alt me-2"></i> رفع فيديو جديد
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 </div>
+
+<!-- Font Awesome Icons -->
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+{% endblock %}
+
 {% endblock %}

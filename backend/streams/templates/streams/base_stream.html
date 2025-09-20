@@ -1,26 +1,217 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>📹 منصة الفيديو</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📹 منصة الفيديو - Smart Tracking</title>
+
+  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info: #06b6d4;
+      --light: #f8fafc;
+      --dark: #1e293b;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+      --shadow-hover: 0 8px 30px rgba(0,0,0,0.15);
+      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8fafc;
+    }
+
+    /* Navbar متطور */
+    .navbar {
+      box-shadow: var(--shadow);
+      padding: 0.8rem 0;
+      transition: var(--transition);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.4rem;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .navbar-brand i {
+      font-size: 1.3rem;
+    }
+
+    .navbar.scrolled {
+      box-shadow: var(--shadow-hover);
+      background-color: rgba(255,255,255,0.95) !important;
+      backdrop-filter: blur(10px);
+    }
+
+    .navbar-dark .navbar-brand,
+    .navbar-dark .nav-link {
+      color: #f8f9fa !important;
+    }
+
+    .navbar-light .navbar-brand,
+    .navbar-light .nav-link {
+      color: #1e293b !important;
+    }
+
+    /* أزرار التنقل */
+    .nav-btn {
+      font-weight: 600;
+      border-radius: 50px;
+      padding: 0.4rem 1.2rem;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .btn-upload {
+      background: linear-gradient(90deg, var(--success), #059669);
+      border: none;
+      color: white;
+    }
+
+    .btn-upload:hover {
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    /* Footer */
+    footer {
+      background: linear-gradient(90deg, var(--dark), #334155);
+      color: white;
+      padding: 2rem 0;
+      margin-top: 3rem;
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    footer p {
+      margin: 0;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* Main Container */
+    main.py-4 {
+      padding: 2rem 0;
+    }
+
+    /* تأثير Scroll للـ Navbar */
+    @media (min-width: 992px) {
+      .navbar-nav .nav-item {
+        margin: 0 0.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar-brand {
+        font-size: 1.2rem;
+      }
+      .nav-btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body class="bg-light">
-  {% with 'bg-'|add:navbar_color as navbar_class %}
-  <nav class="navbar navbar-expand-lg {{ navbar_class }} navbar-dark mb-4">
-  {% endwith %}
-    <div class="container">
-      <a class="navbar-brand" href="{% url 'stream_list' %}">🎥 منصة الفيديو</a>
-      <div>
-        <a href="{% url 'upload_stream' %}" class="btn btn-success btn-sm">⬆️ رفع</a>
-      </div>
+
+<!-- Navbar متطور -->
+{% with 'bg-'|add:navbar_color as navbar_class %}
+<nav class="navbar navbar-expand-lg {{ navbar_class }} navbar-dark mb-4 sticky-top" id="mainNavbar">
+{% endwith %}
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'stream_list' %}">
+      <i class="fas fa-video"></i> منصة الفيديو
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a href="{% url 'stream_list' %}" class="nav-link nav-btn btn btn-outline-light">
+            <i class="bi bi-collection-play"></i> الفيديوهات
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'upload_stream' %}" class="nav-link nav-btn btn btn-upload">
+            <i class="bi bi-cloud-upload"></i> رفع فيديو
+          </a>
+        </li>
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a href="{% url 'logout' %}" class="nav-link nav-btn btn btn-outline-danger">
+              <i class="bi bi-box-arrow-right"></i> تسجيل الخروج
+            </a>
+          </li>
+        {% endif %}
+      </ul>
     </div>
-  </nav>
-  <main class="py-4">
-    {% block content %}{% endblock %}
-  </main>
-  <footer class="text-center p-3 bg-dark text-white mt-4">
-    <p>© 2025 - منصة الفيديو</p>
-  </footer>
+  </div>
+</nav>
+
+<main class="py-4">
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="text-center">
+  <div class="container">
+    <p><i class="fas fa-copyright"></i> 2025 - منصة الفيديو الذكية — نظام مراقبة متكامل</p>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- تأثير Scroll للـ Navbar -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navbar = document.getElementById('mainNavbar');
+    
+    if (navbar) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+          if (navbar.classList.contains('navbar-dark')) {
+            navbar.classList.remove('navbar-dark');
+            navbar.classList.add('navbar-light');
+          }
+        } else {
+          if (navbar.classList.contains('navbar-light')) {
+            navbar.classList.remove('navbar-light');
+            navbar.classList.add('navbar-dark');
+          }
+          navbar.classList.remove('scrolled');
+        }
+      });
+    }
+  });
+</script>
+
 </body>
 </html>

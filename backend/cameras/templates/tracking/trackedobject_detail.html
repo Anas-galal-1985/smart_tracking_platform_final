@@ -1,17 +1,48 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Tracked Object Detail (ID: {{ object.id }})</h2>
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">Tracked Object Detail (ID: {{ object.id }})</h3>
+    </div>
+    <div class="card-body">
+      <dl class="row">
+        <dt class="col-sm-3 fw-semibold">Camera</dt>
+        <dd class="col-sm-9">{{ object.camera.name }}</dd>
 
-<p>Camera: {{ object.camera.name }}</p>
-<p>Track ID: {{ object.track_id }}</p>
-<p>Label: {{ object.label }}</p>
-<p>Confidence: {{ object.confidence }}</p>
-<p>BBox: {{ object.bbox }}</p>
-<p>Timestamp: {{ object.timestamp }}</p>
-<p>Frame Number: {{ object.frame_number }}</p>
-<p>Extra: {{ object.extra }}</p>
+        <dt class="col-sm-3 fw-semibold">Track ID</dt>
+        <dd class="col-sm-9"><span class="badge bg-info text-dark">{{ object.track_id }}</span></dd>
 
-<a href="{% url 'tracked_edit' object.pk %}" class="btn btn-warning">Edit</a>
-<a href="{% url 'tracked_delete' object.pk %}" class="btn btn-danger">Delete</a>
-<a href="{% url 'tracked_list' %}" class="btn btn-secondary">Back to List</a>
+        <dt class="col-sm-3 fw-semibold">Label</dt>
+        <dd class="col-sm-9">{{ object.label }}</dd>
+
+        <dt class="col-sm-3 fw-semibold">Confidence</dt>
+        <dd class="col-sm-9">{{ object.confidence }}</dd>
+
+        <dt class="col-sm-3 fw-semibold">Bounding Box</dt>
+        <dd class="col-sm-9">{{ object.bbox }}</dd>
+
+        <dt class="col-sm-3 fw-semibold">Timestamp</dt>
+        <dd class="col-sm-9">{{ object.timestamp|date:"Y-m-d H:i:s" }}</dd>
+
+        <dt class="col-sm-3 fw-semibold">Frame Number</dt>
+        <dd class="col-sm-9">{{ object.frame_number }}</dd>
+
+        <dt class="col-sm-3 fw-semibold">Extra</dt>
+        <dd class="col-sm-9"><pre class="mb-0">{{ object.extra }}</pre></dd>
+      </dl>
+    </div>
+    <div class="card-footer d-flex gap-2">
+      <a href="{% url 'tracked_edit' object.pk %}" class="btn btn-warning shadow-sm">
+        <i class="bi bi-pencil-square me-1"></i> Edit
+      </a>
+      <a href="{% url 'tracked_delete' object.pk %}" class="btn btn-danger shadow-sm" onclick="return confirm('Are you sure you want to delete this item?');">
+        <i class="bi bi-trash me-1"></i> Delete
+      </a>
+      <a href="{% url 'tracked_list' %}" class="btn btn-secondary shadow-sm">
+        <i class="bi bi-arrow-left me-1"></i> Back to List
+      </a>
+    </div>
+  </div>
+</div>
 {% endblock %}

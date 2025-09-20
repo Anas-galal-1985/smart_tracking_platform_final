@@ -3,48 +3,207 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Dashboard</h2>
+<style>
+  /* فيديو خلفية */
+  .video-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+  .video-bg video {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    filter: brightness(0.5) contrast(1.1);
+  }
+  .video-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: -1;
+  }
+
+  /* تدرجات لونية ديناميكية للخلفية حسب اللون */
+  body.dashboard-bg-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  body.dashboard-bg-success {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  }
+  body.dashboard-bg-danger {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  }
+  body.dashboard-bg-warning {
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  }
+  body.dashboard-bg-info {
+    background: linear-gradient(135deg, #0dcaf0 0%, #6610f2 100%);
+  }
+  body.dashboard-bg-default {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  /* الحاوية */
+  .dashboard-container {
+    background: rgba(255 255 255 / 0.95);
+    border-radius: 20px;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    margin-bottom: 3rem;
+    backdrop-filter: saturate(180%) blur(15px);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* العنوان */
+  .dashboard-container h2 {
+    font-weight: 900;
+    color: #4b0082;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    text-align: center;
+    text-shadow: 0 0 8px rgba(75,0,130,0.6);
+  }
+
+  /* البطاقات */
+  .stat-card {
+    border-radius: 20px;
+    color: #fff;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  }
+  .stat-icon {
+    font-size: 3.5rem;
+    opacity: 0.3;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+  }
+  .stat-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+  .stat-value {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  /* ألوان البطاقات */
+  .bg-indigo {
+    background: linear-gradient(135deg, #5a3f99 0%, #a271f7 100%);
+  }
+  .bg-emerald {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  }
+  .bg-gold {
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    color: #4b3b00;
+  }
+
+  /* قسم الوصول السريع */
+  .quick-access {
+    text-align: center;
+    margin-top: 3rem;
+  }
+  .quick-access h4 {
+    font-weight: 700;
+    color: #4b0082;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-shadow: 0 0 6px rgba(75,0,130,0.5);
+  }
+  .quick-access .btn {
+    border-radius: 50px;
+    padding: 0.75rem 2.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+  .quick-access .btn-outline-primary:hover {
+    background: #5a3f99;
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(90, 63, 153, 0.6);
+  }
+  .quick-access .btn-outline-success:hover {
+    background: #27ae60;
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(39, 174, 96, 0.6);
+  }
+  .quick-access .btn-outline-warning:hover {
+    background: #fda085;
+    color: #4b3b00;
+    box-shadow: 0 8px 20px rgba(253, 160, 133, 0.6);
+  }
+</style>
+
+<!-- فيديو خلفية (اختياري) -->
+
+
+{# إضافة كلاس ديناميكي للجسم حسب لون الخلفية #}
+<script>
+  document.body.classList.add('dashboard-bg-{{ dashboard_bg_color|default:"default" }}');
+</script>
+
+<div class="container dashboard-container">
+    <h2>Dashboard</h2>
 
     <div class="row g-4">
         <!-- إجمالي المستخدمين -->
         <div class="col-md-4">
-            <div class="card text-white bg-primary shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Total Users</h5>
-                    <p class="card-text fs-3">{{ total_users }}</p>
-                </div>
+            <div class="stat-card bg-indigo position-relative">
+                <i class="bi bi-people-fill stat-icon"></i>
+                <div class="stat-title">Total Users</div>
+                <div class="stat-value">{{ total_users }}</div>
             </div>
         </div>
 
         <!-- إجمالي الكاميرات -->
         <div class="col-md-4">
-            <div class="card text-white bg-success shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Total Cameras</h5>
-                    <p class="card-text fs-3">{{ total_cameras }}</p>
-                </div>
+            <div class="stat-card bg-emerald position-relative">
+                <i class="bi bi-camera-video-fill stat-icon"></i>
+                <div class="stat-title">Total Cameras</div>
+                <div class="stat-value">{{ total_cameras }}</div>
             </div>
         </div>
 
         <!-- إجمالي الكائنات المتعقبة -->
         <div class="col-md-4">
-            <div class="card text-white bg-warning shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Total Tracked Objects</h5>
-                    <p class="card-text fs-3">{{ total_tracked }}</p>
-                </div>
+            <div class="stat-card bg-gold position-relative">
+                <i class="bi bi-bounding-box-circles stat-icon"></i>
+                <div class="stat-title">Total Tracked Objects</div>
+                <div class="stat-value">{{ total_tracked }}</div>
             </div>
         </div>
     </div>
 
     <!-- قسم سريع للوصول -->
-    <div class="mt-5">
+    <div class="quick-access">
         <h4>Quick Access</h4>
-        <div class="d-flex gap-3 flex-wrap">
-            <a href="{% url 'users_list' %}" class="btn btn-outline-primary">Users</a>
-            <a href="{% url 'camera_list' %}" class="btn btn-outline-success">Cameras</a>
-            <a href="{% url 'tracked_list' %}" class="btn btn-outline-warning">Tracked Objects</a>
+        <div class="d-flex justify-content-center gap-4 flex-wrap">
+            <a href="{% url 'users_list' %}" class="btn btn-outline-primary shadow-sm">
+                <i class="bi bi-people me-2"></i> Users
+            </a>
+            <a href="{% url 'camera_list' %}" class="btn btn-outline-success shadow-sm">
+                <i class="bi bi-camera-video me-2"></i> Cameras
+            </a>
+            <a href="{% url 'tracked_list' %}" class="btn btn-outline-warning shadow-sm">
+                <i class="bi bi-bounding-box me-2"></i> Tracked Objects
+            </a>
         </div>
     </div>
 </div>
