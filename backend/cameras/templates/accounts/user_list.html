@@ -1,389 +1,111 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block title %}Users - Smart Tracking{% endblock %}
+
 {% block content %}
-<style>
-  :root {
-    --primary: #4a00e0;
-    --primary-light: #8e2de2;
-    --primary-dark: #2d0080;
-    --light: #f5f7fa;
-    --dark: #1e293b;
-    --radius: 20px;
-    --shadow: 0 12px 30px rgba(74, 0, 224, 0.3);
-    --shadow-hover: 0 20px 40px rgba(74, 0, 224, 0.5);
-    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  body {
-    background: linear-gradient(135deg, #f5f7fa, #eef2f6);
-    min-height: 100vh;
-  }
-
-  .users-section {
-    padding: 3rem 0;
-  }
-
-  /* العنوان */
-  .section-title {
-    font-weight: 900;
-    color: var(--primary-dark);
-    letter-spacing: 1.5px;
-    margin-bottom: 3rem;
-    text-align: center;
-    text-transform: uppercase;
-    position: relative;
-    display: inline-block;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .section-title::after {
-    content: '';
-    position: absolute;
-    bottom: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary), var(--primary-light));
-    border-radius: 2px;
-  }
-
-  /* بطاقة المستخدم */
-  .user-card {
-    background: linear-gradient(135deg, var(--primary-light), var(--primary));
-    border-radius: var(--radius);
-    color: #fff;
-    padding: 2.5rem 1.5rem 3rem;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    transition: var(--transition);
-    cursor: pointer;
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-
-  .user-card::before {
-    content: "";
-    position: absolute;
-    top: -40%;
-    right: -30%;
-    width: 150%;
-    height: 150%;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.15), transparent 70%);
-    transform: rotate(25deg);
-    transition: opacity 0.4s ease;
-    opacity: 0.6;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .user-card:hover::before {
-    opacity: 0.9;
-  }
-
-  .user-card:hover {
-    transform: translateY(-10px) scale(1.03);
-    box-shadow: var(--shadow-hover);
-    border-color: rgba(255,255,255,0.3);
-  }
-
-  /* صورة المستخدم */
-  .avatar {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 4px solid rgba(255,255,255,0.7);
-    box-shadow: 0 0 15px rgba(255,255,255,0.4);
-    transition: var(--transition);
-    margin-bottom: 1.2rem;
-    position: relative;
-    z-index: 1;
-  }
-
-  .user-card:hover .avatar {
-    transform: scale(1.15) rotate(5deg);
-    box-shadow: 0 0 25px rgba(255,255,255,0.8);
-  }
-
-  /* اسم المستخدم */
-  .user-card h5 {
-    font-weight: 800;
-    font-size: 1.4rem;
-    margin-bottom: 0.8rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    position: relative;
-    z-index: 1;
-    transition: color 0.3s ease;
-  }
-
-  .user-card:hover h5 {
-    color: #ffd700;
-  }
-
-  /* التفاصيل الإضافية */
-  .extra-info {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.5s ease;
-    font-size: 0.95rem;
-    color: rgba(255,255,255,0.85);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    position: relative;
-    z-index: 1;
-    width: 100%;
-  }
-
-  .user-card:hover .extra-info {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .extra-info p {
-    margin: 0.3rem 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-
-  .extra-info i {
-    font-size: 0.9rem;
-    opacity: 0.9;
-  }
-
-  /* شارة الدور - مميزة وديناميكية */
-  .role-badge {
-    padding: 0.4rem 0.9rem;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 0.85rem;
-    display: inline-block;
-    margin-top: 0.5rem;
-    animation: pulse 2s infinite;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-  }
-
-  .role-admin { background: linear-gradient(90deg, #ef4444, #dc2626); color: white; }
-  .role-staff { background: linear-gradient(90deg, #f59e0b, #d97706); color: white; }
-  .role-user  { background: linear-gradient(90deg, #64748b, #475569); color: white; }
-
-  .role-badge:hover {
-    transform: scale(1.05);
-    animation: none;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(1.05); }
-  }
-
-  /* Pagination */
-  .pagination {
-    justify-content: center;
-    margin-top: 3rem;
-    gap: 0.3rem;
-  }
-
-  .page-link {
-    border-radius: 50% !important;
-    width: 44px;
-    height: 44px;
-    line-height: 40px;
-    text-align: center;
-    font-weight: 700;
-    color: var(--primary);
-    border: 2px solid var(--primary);
-    transition: all 0.3s ease;
-    background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  }
-
-  .page-link:hover {
-    background: var(--primary);
-    color: #fff;
-    box-shadow: 0 4px 15px var(--primary);
-    transform: translateY(-2px);
-  }
-
-  .page-item.active .page-link {
-    background: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
-    box-shadow: 0 4px 15px var(--primary);
-  }
-
-  .page-item.disabled .page-link {
-    color: #cbd5e1;
-    border-color: #e2e8f0;
-    background: #f8fafc;
-  }
-
-  /* حالة فارغة */
-  .empty-state {
-    text-align: center;
-    padding: 5rem 2rem;
-    background: #f8fafc;
-    border-radius: var(--radius);
-    margin: 3rem auto;
-    max-width: 600px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    border: 2px dashed #e2e8f0;
-  }
-
-  .empty-state i {
-    font-size: 4rem;
-    color: #94a3b8;
-    margin-bottom: 1.5rem;
-    animation: bounce 2s infinite;
-  }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-
-  .empty-state h3 {
-    font-weight: 600;
-    color: var(--dark);
-    margin-bottom: 1rem;
-  }
-
-  .empty-state .btn {
-    background: linear-gradient(90deg, var(--primary), var(--primary-light));
-    color: white;
-    padding: 0.7rem 1.8rem;
-    border-radius: 50px;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(74, 0, 224, 0.3);
-    transition: all 0.3s ease;
-    border: none;
-    margin-top: 1rem;
-  }
-
-  .empty-state .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(74, 0, 224, 0.4);
-  }
-
-  @media (max-width: 768px) {
-    .section-title {
-      font-size: 1.8rem;
-      letter-spacing: 1px;
-    }
-    .avatar {
-      width: 100px;
-      height: 100px;
-    }
-    .user-card h5 {
-      font-size: 1.2rem;
-    }
-    .col-md-3 {
-      flex: 0 0 100%;
-      max-width: 100%;
-    }
-  }
-</style>
-
-<div class="container users-section">
-  <h2 class="section-title"><i class="fas fa-users me-2"></i> Users</h2>
-
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-    {% for u in page_obj %}
-    <div class="col">
-      <a href="{% url 'user_detail' u.pk %}" class="text-decoration-none text-white">
-        <div class="user-card">
-          <img src="{% if u.profile.avatar %}{{ u.profile.avatar.url }}{% else %}{% static 'default_avatar.png' %}{% endif %}" 
-               alt="{{ u.username }}" 
-               class="avatar"
-               src="{% if u.profile.avatar %}{{ u.profile.avatar.url }}{% else %}{% static 'default_avatar.png' %}{% endif %}"
-          <h5>{{ u.username }}</h5>
-          <div class="extra-info">
-            <p><i class="fas fa-envelope"></i> {{ u.email|default:"غير متوفر" }}</p>
-            {% if u.profile.role == "admin" %}
-              <span class="role-badge role-admin">
-                <i class="fas fa-crown me-1"></i> مدير
-              </span>
-            {% elif u.profile.role == "staff" %}
-              <span class="role-badge role-staff">
-                <i class="fas fa-user-tie me-1"></i> موظف
-              </span>
-            {% else %}
-              <span class="role-badge role-user">
-                <i class="fas fa-user me-1"></i> مستخدم
-              </span>
-            {% endif %}
-          </div>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0">User Management</h2>
+            <p class="text-muted">Manage all registered users in the system.</p>
         </div>
-      </a>
+        <div>
+            <a href="{% url 'user_add' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Add New User
+            </a>
+        </div>
     </div>
-    {% empty %}
-    <div class="col-12">
-      <div class="empty-state">
-        <i class="fas fa-users-slash"></i>
-        <h3>لا توجد مستخدمين</h3>
-        <p class="text-muted">لا يوجد أي مستخدمين مسجلين في النظام حاليًا.</p>
-        {% if user.is_staff %}
-          <a href="{% url 'user_add' %}" class="btn">
-            <i class="fas fa-plus-circle me-2"></i> إضافة مستخدم جديد
-          </a>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">All Users</h5>
+            <form method="get" class="d-flex">
+                <input type="text" name="q" class="form-control me-2" placeholder="Search users..." value="{{ query }}">
+                <button type="submit" class="btn btn-outline-primary">Search</button>
+            </form>
+        </div>
+        <div class="card-body">
+            {% if page_obj %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Avatar</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Date Joined</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for u in page_obj %}
+                                <tr>
+                                    <th scope="row">{{ u.id }}</th>
+                                    <td>
+                                        <img src="{% if u.profile.avatar %}{{ u.profile.avatar.url }}{% else %}{% static 'default_avatar.png' %}{% endif %}"
+                                             alt="{{ u.username }}" class="avatar-sm">
+                                    </td>
+                                    <td>{{ u.username }}</td>
+                                    <td>{{ u.email|default:"N/A" }}</td>
+                                    <td>
+                                        {% if u.is_staff %}
+                                            <span class="badge bg-primary">Admin</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">User</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ u.date_joined|date:"Y-m-d" }}</td>
+                                    <td>
+                                        <a href="{% url 'user_detail' u.pk %}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
+                                        <a href="{% url 'user_edit' u.pk %}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
+                                        <a href="{% url 'user_delete' u.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-people-fill fs-1 text-muted"></i>
+                    <h5 class="mt-3">No Users Found</h5>
+                    <p class="text-muted">There are no users matching your search criteria.</p>
+                </div>
+            {% endif %}
+        </div>
+        {% if page_obj.paginator.num_pages > 1 %}
+            <div class="card-footer">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mb-0">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page=1{% if query %}&q={{ query }}{% endif %}">&laquo; First</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Previous</a></li>
+                        {% endif %}
+
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                        </li>
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">Last &raquo;</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
         {% endif %}
-      </div>
     </div>
-    {% endfor %}
-  </div>
-
-  <!-- Pagination -->
-  {% if page_obj.paginator.num_pages > 1 %}
-  <nav aria-label="Page navigation" class="mt-5">
-    <ul class="pagination justify-content-center">
-      {% if page_obj.has_previous %}
-        <li class="page-item">
-          <a class="page-link" href="?page=1{% if query %}&q={{ query }}{% endif %}" aria-label="First">
-            <i class="fas fa-angle-double-left"></i>
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" aria-label="Previous">
-            <i class="fas fa-angle-left"></i>
-          </a>
-        </li>
-      {% endif %}
-
-      <li class="page-item disabled">
-        <span class="page-link">الصفحة {{ page_obj.number }} من {{ page_obj.paginator.num_pages }}</span>
-      </li>
-
-      {% if page_obj.has_next %}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}" aria-label="Next">
-            <i class="fas fa-angle-right"></i>
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}" aria-label="Last">
-            <i class="fas fa-angle-double-right"></i>
-          </a>
-        </li>
-      {% endif %}
-    </ul>
-  </nav>
-  {% endif %}
 </div>
 
-<!-- Font Awesome Icons -->
-{% block extra_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-{% endblock %}
-
+<style>
+.avatar-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+</style>
 {% endblock %}

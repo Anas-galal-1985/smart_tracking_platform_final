@@ -1,50 +1,80 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard - Smart Tracking{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4">📊 Dashboard</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0">Dashboard</h2>
+            <p class="text-muted">Welcome back, {{ user.username }}!</p>
+        </div>
+        <div>
+            <a href="#" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Add New
+            </a>
+        </div>
+    </div>
 
     <div class="row">
-        <!-- المستخدمون -->
-        <div class="col-md-4 mb-3">
-            <div class="card text-white bg-primary h-100">
-                <div class="card-body">
-                    <h5 class="card-title">المستخدمون</h5>
-                    <p class="card-text fs-3">{{ total_users }}</p>
-                    <a href="{% url 'users_list' %}" class="btn btn-light btn-sm">عرض المستخدمين</a>
+        <!-- Users -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-people-fill fs-1 text-primary"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h5 class="card-title mb-1">Users</h5>
+                        <p class="card-text fs-3 fw-bold">{{ total_users }}</p>
+                    </div>
+                    <a href="{% url 'users_list' %}" class="stretched-link"></a>
                 </div>
             </div>
         </div>
 
-        <!-- الكاميرات -->
-        <div class="col-md-4 mb-3">
-            <div class="card text-white bg-success h-100">
-                <div class="card-body">
-                    <h5 class="card-title">الكاميرات</h5>
-                    <p class="card-text fs-3">{{ total_cameras }}</p>
-                    <a href="{% url 'camera_list' %}" class="btn btn-light btn-sm">عرض الكاميرات</a>
+        <!-- Cameras -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-camera-video-fill fs-1 text-success"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h5 class="card-title mb-1">Cameras</h5>
+                        <p class="card-text fs-3 fw-bold">{{ total_cameras }}</p>
+                    </div>
+                    <a href="{% url 'camera_list' %}" class="stretched-link"></a>
                 </div>
             </div>
         </div>
 
-        <!-- الكائنات المتعقبة -->
-        <div class="col-md-4 mb-3">
-            <div class="card text-white bg-warning h-100">
-                <div class="card-body">
-                    <h5 class="card-title">الكائنات المتعقبة</h5>
-                    <p class="card-text fs-3">{{ total_tracked }}</p>
-                    <a href="{% url 'tracked_list' %}" class="btn btn-light btn-sm">عرض الكائنات</a>
+        <!-- Tracked Objects -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-eye-fill fs-1 text-warning"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h5 class="card-title mb-1">Tracked Objects</h5>
+                        <p class="card-text fs-3 fw-bold">{{ total_tracked }}</p>
+                    </div>
+                    <a href="{% url 'tracked_list' %}" class="stretched-link"></a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- قسم إضافي للإحصاءات أو الرسوم البيانية لاحقاً -->
     <div class="mt-4">
-        <h4>إحصاءات إضافية</h4>
-        <p>يمكن إضافة رسوم بيانية هنا لاحقًا باستخدام Chart.js أو أي مكتبة أخرى.</p>
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Additional Statistics</h5>
+                <p class="text-muted">Charts and graphs will be added here soon.</p>
+                <i class="bi bi-bar-chart-line-fill fs-1 text-muted"></i>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
